@@ -39,12 +39,12 @@ class Vx {
     );
     const x = /* @__PURE__ */ new Map([
       ["dev", "http://localhost:3001"],
-      ["uat", "https://uat-pay.baray.io"],
-      ["prod", "https://pay.baray.io"]
-    ]), p = /* @__PURE__ */ new Map([
-      ["dev", "http://localhost:5173"],
       ["uat", "https://uat-api.baray.io"],
       ["prod", "https://api.baray.io"]
+    ]), p = /* @__PURE__ */ new Map([
+      ["dev", "http://localhost:5173"],
+      ["uat", "https://uat-pay.baray.io"],
+      ["prod", "https://pay.baray.io"]
     ]);
     this.public_key = z, this.api_gateway = x.get(v.mode), this.pay_gateway = p.get(v.mode);
   }
