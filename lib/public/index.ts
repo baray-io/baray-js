@@ -17,15 +17,16 @@ export class PublicClient {
 
 		const api_gateways = new Map([
 			["dev", "http://localhost:3001"],
-			["uat", "https://uat-pay.baray.io"],
-			["prod", "https://pay.baray.io"],
+			["uat", "https://uat-api.baray.io"],
+			["prod", "https://api.baray.io"],
 		]);
 
 		const pay_gateways = new Map([
 			["dev", "http://localhost:5173"],
-			["uat", "https://uat-api.baray.io"],
-			["prod", "https://api.baray.io"],
+			["uat", "https://uat-pay.baray.io"],
+			["prod", "https://pay.baray.io"],
 		]);
+
 		this.public_key = public_key;
 		// this.api_key = key.key;
 		this.api_gateway = api_gateways.get(key.mode)!;
