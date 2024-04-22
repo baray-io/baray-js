@@ -62,6 +62,7 @@ export class PublicClient {
 		frame.src = `${this.pay_gateway}/?intent_id=${intent_id}`;
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
+		frame.style.zIndex = "2147483647";
 		frame.style.top = "0";
 		frame.style.left = "0";
 		frame.style.width = "100vw";
