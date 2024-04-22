@@ -1,1 +1,1 @@
-export { PrivateClient, PublicClient } from "./lib/main";
+export { PrivateClient, PublicClient } from "./lib";
