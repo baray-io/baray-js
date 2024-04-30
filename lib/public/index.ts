@@ -59,9 +59,13 @@ export class PublicClient {
 		if (window?.Telegram && window?.Telegram?.WebApp) {
 			// @ts-expect-error I know what I am doing
 			return window.Telegram.WebApp.initData !== undefined;
+		} else {
+			const userAgent = navigator.userAgent;
+			return userAgent.indexOf("Telegram") !== -1;
 		}
-		return false;
 	}
+
+	isTelegramWebAppUA() {}
 
 	private loadFrame(intent_id: string) {
 		const body = document.body;
