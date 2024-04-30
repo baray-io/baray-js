@@ -78,8 +78,13 @@ export class PublicClient {
 				}
 
 				if (e.data === "isTelegram") {
-					e.source?.postMessage(
-						JSON.stringify({ isTelegram: "Telegram" in window })
+					// e.source?.postMessage(
+					// 	JSON.stringify({ isTelegram: "Telegram" in window })
+					// );
+					const iframe = document.querySelector("#baray") as HTMLIFrameElement;
+					iframe?.contentWindow?.postMessage(
+						JSON.stringify({ isTelegram: "Telegram" in window }),
+						"*"
 					);
 					console.log(
 						"baray-js responsed: ",
