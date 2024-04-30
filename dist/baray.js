@@ -67,7 +67,7 @@ class Vx {
     const v = document.body, x = document.createElement("iframe");
     x.id = "baray", x.src = `${this.pay_gateway}/?intent_id=${z}`, x.style.backgroundColor = "transparent", x.style.position = "fixed", x.style.zIndex = "2147483647", x.style.top = "0", x.style.left = "0", x.style.width = "100vw", x.style.height = "100dvh", x.style.border = "none", x.style.transition = "ease-out 300ms", window.addEventListener("message", (C) => {
       var A;
-      console.log("baray-js recieved message: ", C.data), C.origin === this.pay_gateway && (C.data === "close" && this.unloadFrame(), C.data === "isTelegram" && ((A = C.source) == null || A.postMessage(
+      C.origin === this.pay_gateway && (console.log("baray-js recieved message: ", C.data), C.data === "close" && this.unloadFrame(), C.data === "isTelegram" && ((A = C.source) == null || A.postMessage(
         JSON.stringify({ isTelegram: "Telegram" in window })
       ), console.log(
         "baray-js responsed: ",

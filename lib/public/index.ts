@@ -71,9 +71,8 @@ export class PublicClient {
 		frame.style.transition = "ease-out 300ms";
 
 		window.addEventListener("message", (e) => {
-			console.log("baray-js recieved message: ", e.data);
-
 			if (e.origin === this.pay_gateway) {
+				console.log("baray-js recieved message: ", e.data);
 				if (e.data === "close") {
 					this.unloadFrame();
 				}
