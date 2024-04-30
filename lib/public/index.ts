@@ -75,6 +75,12 @@ export class PublicClient {
 				if (e.data === "close") {
 					this.unloadFrame();
 				}
+
+				if (e.data === "isTelegram") {
+					e.source?.postMessage(
+						JSON.stringify({ isTelegram: "Telegram" in window })
+					);
+				}
 			}
 		});
 
