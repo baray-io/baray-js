@@ -25,6 +25,7 @@
 		"vite": "^5.0.10"
 	},
 	"dependencies": {
+		"@tma.js/sdk": "^1.5.3",
 		"@types/crypto-js": "^4.2.2",
 		"crypto-js": "^4.2.0",
 		"i": "^0.3.7",
