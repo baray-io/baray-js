@@ -1,7 +1,6 @@
 import { isBrower } from "../utils/is_browser";
 import { Key } from "../utils/key";
 import { must } from "../utils/must";
-import { request } from "@tma.js/sdk";
 
 export class PublicClient {
 	private readonly public_key: string;
@@ -55,26 +54,22 @@ export class PublicClient {
 			}, 500);
 		}
 	}
+	isTelegramWebApp() {
+		// @ts-expect-error I know what I am doing
+		if (window?.Telegram && window?.Telegram?.WebApp) {
+			// @ts-expect-error I know what I am doing
+			return window.Telegram.WebApp.initData !== undefined;
+		}
+		return false;
+	}
 
 	private loadFrame(intent_id: string) {
-		let isTMA;
-
-		try {
-			request("web_app_request_theme", "theme_changed", {
-				timeout: 100,
-			}).then(() => {
-				isTMA = true;
-			});
-		} catch {
-			isTMA = false;
-		}
-
 		const body = document.body;
 		const frame = document.createElement("iframe");
 		frame.id = "baray";
-		frame.src = `${this.pay_gateway}/?intent_id=${intent_id}${
-			isTMA && "&twa=true"
-		}`;
+		frame.src = this.isTelegramWebApp()
+			? `${this.pay_gateway}/?intent_id=${intent_id}&twa=true`
+			: `${this.pay_gateway}/?intent_id=${intent_id}`;
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
 		frame.style.zIndex = "2147483647";
