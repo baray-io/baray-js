@@ -55,24 +55,16 @@ export class PublicClient {
 		}
 	}
 	isTelegramWebApp() {
-		// @ts-expect-error I know what I am doing
-		if (window?.Telegram && window?.Telegram?.WebApp) {
-			// @ts-expect-error I know what I am doing
-			return window.Telegram.WebApp.initData !== undefined;
-		} else {
-			const userAgent = navigator.userAgent;
-			return userAgent.indexOf("Telegram") !== -1;
-		}
+		const userAgent = navigator.userAgent;
+		return userAgent.indexOf("Telegram") !== -1;
 	}
-
-	isTelegramWebAppUA() {}
 
 	private loadFrame(intent_id: string) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
 		frame.id = "baray";
 		frame.src = this.isTelegramWebApp()
-			? `${this.pay_gateway}/?intent_id=${intent_id}&twa=true`
+			? `${this.pay_gateway}/?twa=true&intent_id=${intent_id}`
 			: `${this.pay_gateway}/?intent_id=${intent_id}`;
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
