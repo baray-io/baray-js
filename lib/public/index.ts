@@ -82,24 +82,8 @@ export class PublicClient {
 
 		window.addEventListener("message", (e) => {
 			if (e.origin === this.pay_gateway) {
-				console.log("baray-js recieved message: ", e.data);
 				if (e.data === "close") {
 					this.unloadFrame();
-				}
-
-				if (e.data === "isTelegram") {
-					// e.source?.postMessage(
-					// 	JSON.stringify({ isTelegram: "Telegram" in window })
-					// );
-					const iframe = document.querySelector("#baray") as HTMLIFrameElement;
-					iframe?.contentWindow?.postMessage(
-						JSON.stringify({ isTelegram: "Telegram" in window }),
-						"*"
-					);
-					console.log(
-						"baray-js responsed: ",
-						JSON.stringify({ isTelegram: "Telegram" in window })
-					);
 				}
 			}
 		});
