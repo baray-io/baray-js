@@ -71,6 +71,8 @@ export class PublicClient {
 		frame.style.transition = "ease-out 300ms";
 
 		window.addEventListener("message", (e) => {
+			console.log("baray-js recieved message: ", e.data);
+
 			if (e.origin === this.pay_gateway) {
 				if (e.data === "close") {
 					this.unloadFrame();
@@ -78,6 +80,10 @@ export class PublicClient {
 
 				if (e.data === "isTelegram") {
 					e.source?.postMessage(
+						JSON.stringify({ isTelegram: "Telegram" in window })
+					);
+					console.log(
+						"baray-js responsed: ",
 						JSON.stringify({ isTelegram: "Telegram" in window })
 					);
 				}
