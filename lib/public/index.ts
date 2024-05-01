@@ -54,19 +54,13 @@ export class PublicClient {
 			}, 500);
 		}
 	}
-	isTelegramWebApp() {
-		const userAgent = navigator.userAgent;
-		return userAgent.indexOf("Telegram") !== -1;
-	}
 
 	private loadFrame(intent_id: string) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
 
 		frame.id = "baray";
-		frame.src = this.isTelegramWebApp()
-			? `${this.pay_gateway}/?twa=true&intent_id=${intent_id}`
-			: `${this.pay_gateway}/?intent_id=${intent_id}`;
+		frame.src = `${this.pay_gateway}/?intent_id=${intent_id}`;
 
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
