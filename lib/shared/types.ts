@@ -1,10 +1,10 @@
 export type IntentPayload = {
-	items: any[];
-	total_price: string;
-	total_discount: string;
-	grand_total: string;
-	customer_id: string;
+	amount: String;
+	currency: String;
+	order_id: String;
 };
+
+// pub customer_id: String,
 
 export type IntentDetail = {
 	_id: string;

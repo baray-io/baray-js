@@ -63,12 +63,9 @@ class Vx {
       z.remove();
     }, 500));
   }
-  isTelegramWebApp() {
-    return navigator.userAgent.indexOf("Telegram") !== -1;
-  }
   loadFrame(z) {
     const v = document.body, x = document.createElement("iframe");
-    x.id = "baray", x.src = this.isTelegramWebApp() ? `${this.pay_gateway}/?twa=true&intent_id=${z}` : `${this.pay_gateway}/?intent_id=${z}`, x.style.backgroundColor = "transparent", x.style.position = "fixed", x.style.zIndex = "2147483647", x.style.top = "0", x.style.left = "0", x.style.width = "100vw", x.style.height = "100dvh", x.style.border = "none", x.style.transition = "ease-out 300ms", window.addEventListener("message", (p) => {
+    x.id = "baray", x.src = `${this.pay_gateway}/?intent_id=${z}`, x.style.backgroundColor = "transparent", x.style.position = "fixed", x.style.zIndex = "2147483647", x.style.top = "0", x.style.left = "0", x.style.width = "100vw", x.style.height = "100dvh", x.style.border = "none", x.style.transition = "ease-out 300ms", window.addEventListener("message", (p) => {
       p.origin === this.pay_gateway && p.data === "close" && this.unloadFrame();
     }), v.appendChild(x);
   }
