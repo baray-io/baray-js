@@ -35,10 +35,10 @@ class A0 {
     V(c === "wh", "Invalid webhook key"), V(x === "sk" || x === "iv", "Invalid webhook key type"), V(typeof C < "u", "Invlid key"), this.type = c, this.mode = x, this.key = C;
   }
   isSecretKey() {
-    return this.type === "sk";
+    return this.mode === "sk";
   }
   isIVKey() {
-    return this.type === "iv";
+    return this.mode === "iv";
   }
 }
 class Jx {

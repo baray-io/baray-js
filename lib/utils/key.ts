@@ -51,10 +51,10 @@ export class WebhookKey {
 	}
 
 	public isSecretKey() {
-		return this.type === "sk";
+		return this.mode === "sk";
 	}
 
 	public isIVKey() {
-		return this.type === "iv";
+		return this.mode === "iv";
 	}
 }
