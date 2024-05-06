@@ -57,7 +57,7 @@ export class PrivateClient {
 		this.wh_iv_key = wh_iv_key;
 	}
 
-	encrypt(data: string) {
+	public encrypt(data: string) {
 		let key = new Key(this.secret_key);
 		let sk = CryptoJS.enc.Base64.parse(key.key);
 		let iv = CryptoJS.enc.Base64.parse(this.iv_key);
@@ -74,7 +74,7 @@ export class PrivateClient {
 		);
 	}
 
-	decryptIntent(data: string) {
+	public decryptIntent(data: string) {
 		try {
 			let _sk = new WebhookKey(this.wh_secret_key);
 			let _iv = new WebhookKey(this.wh_iv_key);
