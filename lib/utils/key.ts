@@ -30,3 +30,31 @@ export class Key {
 		return this.type === "pk";
 	}
 }
+
+export class WebhookKey {
+	public type: string;
+	public mode: string;
+	public key: string;
+
+	public constructor(key_string: string) {
+		const [keyType, mode, actualKey] = key_string.split("_");
+
+		must(keyType === "wh", "Invalid webhook key");
+
+		must(mode === "sk" || mode === "iv", "Invalid webhook key type");
+
+		must(typeof actualKey !== "undefined", "Invlid key");
+
+		this.type = keyType;
+		this.mode = mode;
+		this.key = actualKey;
+	}
+
+	public isSecretKey() {
+		return this.type === "sk";
+	}
+
+	public isIVKey() {
+		return this.type === "iv";
+	}
+}
