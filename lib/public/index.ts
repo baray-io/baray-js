@@ -44,7 +44,7 @@ export class PublicClient {
 		return await res.json();
 	}
 
-	private unloadFrame() {
+	public unloadFrame() {
 		const existing = document.querySelector("#baray") as HTMLIFrameElement;
 		if (existing) {
 			existing.style.opacity = "0";
