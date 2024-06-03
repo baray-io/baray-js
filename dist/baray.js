@@ -73,6 +73,7 @@ class Jx {
     })).json();
   }
   unloadFrame() {
+    console.log("Frame unloading");
     const z = document.querySelector("#baray");
     z && (z.style.opacity = "0", z.style.transform = "translate(0px, 20px)", setTimeout(() => {
       z.remove();
@@ -80,7 +81,7 @@ class Jx {
   }
   loadFrame(z) {
     const c = document.body, x = document.createElement("iframe");
-    x.id = "baray", x.src = `${this.pay_gateway}/?intent_id=${z}`, x.style.backgroundColor = "transparent", x.style.position = "fixed", x.style.zIndex = "2147483647", x.style.top = "0", x.style.left = "0", x.style.width = "100vw", x.style.height = "100dvh", x.style.border = "none", x.style.transition = "ease-out 300ms", window.addEventListener("message", (C) => {
+    x.id = "baray", x.src = `${this.pay_gateway}/${z}`, x.style.backgroundColor = "transparent", x.style.position = "fixed", x.style.zIndex = "2147483647", x.style.top = "0", x.style.left = "0", x.style.width = "100vw", x.style.height = "100dvh", x.style.border = "none", x.style.transition = "ease-out 300ms", window.addEventListener("message", (C) => {
       C.origin === this.pay_gateway && C.data === "close" && this.unloadFrame();
     }), c.appendChild(x);
   }

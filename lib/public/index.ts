@@ -45,6 +45,7 @@ export class PublicClient {
 	}
 
 	public unloadFrame() {
+		console.log("Frame unloading");
 		const existing = document.querySelector("#baray") as HTMLIFrameElement;
 		if (existing) {
 			existing.style.opacity = "0";
@@ -60,7 +61,7 @@ export class PublicClient {
 		const frame = document.createElement("iframe");
 
 		frame.id = "baray";
-		frame.src = `${this.pay_gateway}/?intent_id=${intent_id}`;
+		frame.src = `${this.pay_gateway}/${intent_id}`;
 
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
