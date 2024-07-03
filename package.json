@@ -4,8 +4,7 @@
 	"version": "0.1.2",
 	"type": "module",
 	"files": [
-		"dist",
-		"index.d.ts"
+		"dist"
 	],
 	"main": "./dist/baray.umd.cjs",
 	"module": "./dist/baray.js",
