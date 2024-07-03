@@ -1,15 +1,11 @@
-import ParentAPI from "ibridge/dist/Parent";
 import { isBrower } from "../utils/is_browser";
 import { Key } from "../utils/key";
 import { must } from "../utils/must";
-import ibridge from "ibridge";
 
 export class PublicClient {
-	private readonly public_key: string;
+	// private readonly public_key: string;
 	private readonly pay_gateway: string;
-	private readonly api_gateway: string;
-	private readonly bridge: ParentAPI;
-	private readonly frame: HTMLIFrameElement;
+	// private readonly api_gateway: string;
 
 	public constructor(public_key: string) {
 		must(isBrower(), "This libary is meant to run only in the web browser");
@@ -19,11 +15,11 @@ export class PublicClient {
 			"Invalid public key. A public key must start with pk_***"
 		);
 
-		const api_gateways = new Map([
-			["dev", "http://localhost:3001"],
-			["uat", "https://uat-api.baray.io"],
-			["prod", "https://api.baray.io"],
-		]);
+		// const api_gateways = new Map([
+		// 	["dev", "http://localhost:3001"],
+		// 	["uat", "https://uat-api.baray.io"],
+		// 	["prod", "https://api.baray.io"],
+		// ]);
 
 		const pay_gateways = new Map([
 			["dev", "http://localhost:5173"],
@@ -31,20 +27,42 @@ export class PublicClient {
 			["prod", "https://pay.baray.io"],
 		]);
 
-		this.public_key = public_key;
+		// this.public_key = public_key;
 		// this.api_key = key.key;
-		this.api_gateway = api_gateways.get(key.mode)!;
+		// this.api_gateway = api_gateways.get(key.mode)!;
 		this.pay_gateway = pay_gateways.get(key.mode)!;
-		this.bridge = new ibridge.Parent({
-			url: pay_gateways.get(key.mode)!,
-		});
+	}
+
+	// private async validateIntent(intent_id: string) {
+	// 	const res = await fetch(`${this.api_gateway}/pay/validate/${intent_id}`, {
+	// 		method: "POST",
+	// 		headers: {
+	// 			"x-api-key": this.public_key,
+	// 			contentType: "application/json",
+	// 		},
+	// 	});
+	// 	return await res.json();
+	// }
+
+	public unloadFrame() {
+		console.log("Frame unloading");
+		const existing = document.querySelector("#baray") as HTMLIFrameElement;
+		if (existing) {
+			existing.style.opacity = "0";
+			existing.style.transform = "translate(0px, 20px)";
+			setTimeout(() => {
+				existing.remove();
+			}, 500);
+		}
+	}
+
+	private loadFrame(intent_id: string) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
 
 		frame.id = "baray";
-		frame.src = this.pay_gateway;
+		frame.src = `${this.pay_gateway}/${intent_id}`;
 
-		frame.style.display = "none";
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
 		frame.style.zIndex = "2147483647";
@@ -62,49 +80,14 @@ export class PublicClient {
 				}
 			}
 		});
-		this.frame = frame;
-		body.appendChild(this.frame);
-	}
 
-	async init() {
-		await this.bridge.handshake();
-		this.bridge.emitToChild("ping", "initial connection");
-	}
-
-	private async validateIntent(intent_id: string) {
-		const res = await fetch(`${this.api_gateway}/pay/validate/${intent_id}`, {
-			method: "POST",
-			headers: {
-				"x-api-key": this.public_key,
-				contentType: "application/json",
-			},
-		});
-		return await res.json();
-	}
-
-	public unloadFrame() {
-		console.log("Frame unloading");
-		const existing = document.querySelector("#baray") as HTMLIFrameElement;
-		if (existing) {
-			existing.style.opacity = "0";
-			existing.style.transform = "translate(0px, 20px)";
-			setTimeout(() => {
-				existing.remove();
-			}, 500);
-		}
-	}
-
-	private loadFrame(intent_id: string) {
-		this.bridge.emitToChild("setIntent", intent_id);
-		this.frame.style.display = "initial";
+		body.appendChild(frame);
 	}
 
 	confirmPayment(intent_id: string) {
 		if (!intent_id) {
 			return this.unloadFrame();
 		}
-		this.validateIntent(intent_id).then((_) => {
-			this.loadFrame(intent_id);
-		});
+		this.loadFrame(intent_id);
 	}
 }
