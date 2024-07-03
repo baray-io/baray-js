@@ -1,11 +1,15 @@
+import ParentAPI from "ibridge/dist/Parent";
 import { isBrower } from "../utils/is_browser";
 import { Key } from "../utils/key";
 import { must } from "../utils/must";
+import ibridge from "ibridge";
 
 export class PublicClient {
 	private readonly public_key: string;
 	private readonly pay_gateway: string;
 	private readonly api_gateway: string;
+	private readonly bridge: ParentAPI;
+	private readonly frame: HTMLIFrameElement;
 
 	public constructor(public_key: string) {
 		must(isBrower(), "This libary is meant to run only in the web browser");
@@ -31,6 +35,40 @@ export class PublicClient {
 		// this.api_key = key.key;
 		this.api_gateway = api_gateways.get(key.mode)!;
 		this.pay_gateway = pay_gateways.get(key.mode)!;
+		this.bridge = new ibridge.Parent({
+			url: pay_gateways.get(key.mode)!,
+		});
+		const body = document.body;
+		const frame = document.createElement("iframe");
+
+		frame.id = "baray";
+		frame.src = this.pay_gateway;
+
+		frame.style.display = "none";
+		frame.style.backgroundColor = "transparent";
+		frame.style.position = "fixed";
+		frame.style.zIndex = "2147483647";
+		frame.style.top = "0";
+		frame.style.left = "0";
+		frame.style.width = "100vw";
+		frame.style.height = "100dvh";
+		frame.style.border = "none";
+		frame.style.transition = "ease-out 300ms";
+
+		window.addEventListener("message", (e) => {
+			if (e.origin === this.pay_gateway) {
+				if (e.data === "close") {
+					this.unloadFrame();
+				}
+			}
+		});
+		this.frame = frame;
+		body.appendChild(this.frame);
+	}
+
+	async init() {
+		await this.bridge.handshake();
+		this.bridge.emitToChild("ping", "initial connection");
 	}
 
 	private async validateIntent(intent_id: string) {
@@ -57,31 +95,8 @@ export class PublicClient {
 	}
 
 	private loadFrame(intent_id: string) {
-		const body = document.body;
-		const frame = document.createElement("iframe");
-
-		frame.id = "baray";
-		frame.src = `${this.pay_gateway}/${intent_id}`;
-
-		frame.style.backgroundColor = "transparent";
-		frame.style.position = "fixed";
-		frame.style.zIndex = "2147483647";
-		frame.style.top = "0";
-		frame.style.left = "0";
-		frame.style.width = "100vw";
-		frame.style.height = "100dvh";
-		frame.style.border = "none";
-		frame.style.transition = "ease-out 300ms";
-
-		window.addEventListener("message", (e) => {
-			if (e.origin === this.pay_gateway) {
-				if (e.data === "close") {
-					this.unloadFrame();
-				}
-			}
-		});
-
-		body.appendChild(frame);
+		this.bridge.emitToChild("setIntent", intent_id);
+		this.frame.style.display = "initial";
 	}
 
 	confirmPayment(intent_id: string) {
