@@ -56,7 +56,7 @@ export class PublicClient {
 		}
 	}
 
-	private loadFrame(intent_id: string) {
+	private loadFrame(intent_id: string, onSuccess?: () => void) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
 
@@ -80,7 +80,9 @@ export class PublicClient {
 				}
 
 				if (e.data === "success") {
-					this.unloadFrame();
+					if (typeof onSuccess === "function") {
+						onSuccess();
+					}
 				}
 			}
 		});
@@ -88,20 +90,10 @@ export class PublicClient {
 		body.appendChild(frame);
 	}
 
-	onSuccess(callback: () => void) {
-		window.addEventListener("message", (e) => {
-			if (e.origin === this.pay_gateway) {
-				if (e.data === "success") {
-					callback();
-				}
-			}
-		});
-	}
-
-	confirmPayment(intent_id: string) {
+	confirmPayment(intent_id: string, onSuccess?: () => void) {
 		if (!intent_id) {
 			return this.unloadFrame();
 		}
-		this.loadFrame(intent_id);
+		this.loadFrame(intent_id, onSuccess);
 	}
 }
