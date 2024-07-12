@@ -3,6 +3,5 @@ export declare class PublicClient {
     constructor(public_key: string);
     unloadFrame(): void;
     private loadFrame;
-    onSuccess(callback: () => void): void;
-    confirmPayment(intent_id: string): void;
+    confirmPayment(intent_id: string, onSuccess?: () => void): void;
 }
