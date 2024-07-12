@@ -4,8 +4,6 @@ export type IntentPayload = {
 	order_id: String;
 };
 
-// pub customer_id: String,
-
 export type IntentDetail = {
 	_id: string;
 	items: any[];

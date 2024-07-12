@@ -78,10 +78,24 @@ export class PublicClient {
 				if (e.data === "close") {
 					this.unloadFrame();
 				}
+
+				if (e.data === "success") {
+					this.unloadFrame();
+				}
 			}
 		});
 
 		body.appendChild(frame);
+	}
+
+	onSuccess(callback: () => void) {
+		window.addEventListener("message", (e) => {
+			if (e.origin === this.pay_gateway) {
+				if (e.data === "success") {
+					callback();
+				}
+			}
+		});
 	}
 
 	confirmPayment(intent_id: string) {
