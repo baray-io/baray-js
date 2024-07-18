@@ -56,6 +56,7 @@ export class PublicClient {
 		}
 	}
 
+	// @ts-ignore
 	private loadFrame(intent_id: string, onSuccess?: () => void) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
@@ -90,10 +91,16 @@ export class PublicClient {
 		body.appendChild(frame);
 	}
 
-	confirmPayment(intent_id: string, onSuccess?: () => void) {
+	openPortal(intent_id: string) {
+		let url = `${this.pay_gateway}/${intent_id}`;
+		window.location.replace(url);
+	}
+
+	confirmPayment(intent_id: string, _onSuccess?: () => void) {
 		if (!intent_id) {
 			return this.unloadFrame();
 		}
-		this.loadFrame(intent_id, onSuccess);
+		// this.loadFrame(intent_id, onSuccess);
+		this.openPortal(intent_id);
 	}
 }
