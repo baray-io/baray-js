@@ -85,7 +85,7 @@ class Jx {
   }
   openPortal(z) {
     let c = `${this.pay_gateway}/${z}`;
-    window.location.replace(c);
+    window.open(c, "_blank", "noopener noreferrer");
   }
   confirmPayment(z, c) {
     if (!z)

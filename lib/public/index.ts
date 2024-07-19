@@ -93,7 +93,8 @@ export class PublicClient {
 
 	openPortal(intent_id: string) {
 		let url = `${this.pay_gateway}/${intent_id}`;
-		window.location.replace(url);
+		// window.location.replace(url);
+		window.open(url, "_blank", "noopener noreferrer");
 	}
 
 	confirmPayment(intent_id: string, _onSuccess?: () => void) {
