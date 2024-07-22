@@ -3,9 +3,7 @@ import { Key } from "../utils/key";
 import { must } from "../utils/must";
 
 export class PublicClient {
-	private readonly public_key: string;
 	private readonly pay_gateway: string;
-	private readonly api_gateway: string;
 
 	public constructor(public_key: string) {
 		must(isBrower(), "This libary is meant to run only in the web browser");
@@ -15,35 +13,17 @@ export class PublicClient {
 			"Invalid public key. A public key must start with pk_***"
 		);
 
-		const api_gateways = new Map([
-			["dev", "http://localhost:3001"],
+		const pay_gateways = new Map([
+			["dev", "http://localhost:5173"],
 			["uat", "https://uat-pay.baray.io"],
 			["prod", "https://pay.baray.io"],
 		]);
 
-		const pay_gateways = new Map([
-			["dev", "http://localhost:5173"],
-			["uat", "https://uat-api.baray.io"],
-			["prod", "https://api.baray.io"],
-		]);
-		this.public_key = public_key;
-		// this.api_key = key.key;
-		this.api_gateway = api_gateways.get(key.mode)!;
 		this.pay_gateway = pay_gateways.get(key.mode)!;
 	}
 
-	private async validateIntent(intent_id: string) {
-		const res = await fetch(`${this.api_gateway}/pay/validate/${intent_id}`, {
-			method: "POST",
-			headers: {
-				"x-api-key": this.public_key,
-				contentType: "application/json",
-			},
-		});
-		return await res.json();
-	}
-
-	private unloadFrame() {
+	public unloadFrame() {
+		console.log("Frame unloading");
 		const existing = document.querySelector("#baray") as HTMLIFrameElement;
 		if (existing) {
 			existing.style.opacity = "0";
@@ -54,13 +34,21 @@ export class PublicClient {
 		}
 	}
 
-	private loadFrame(intent_id: string) {
+	getPayLink(intent_id: string) {
+		return `${this.pay_gateway}/${intent_id}`;
+	}
+
+	// @ts-ignore
+	private loadFrame(intent_id: string, onSuccess?: () => void) {
 		const body = document.body;
 		const frame = document.createElement("iframe");
+
 		frame.id = "baray";
-		frame.src = `${this.pay_gateway}/?intent_id=${intent_id}`;
+		frame.src = this.getPayLink(intent_id);
+
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
+		frame.style.zIndex = "2147483647";
 		frame.style.top = "0";
 		frame.style.left = "0";
 		frame.style.width = "100vw";
@@ -73,18 +61,34 @@ export class PublicClient {
 				if (e.data === "close") {
 					this.unloadFrame();
 				}
+
+				if (e.data === "success") {
+					if (typeof onSuccess === "function") {
+						onSuccess();
+					}
+				}
 			}
 		});
 
 		body.appendChild(frame);
 	}
 
-	confirmPayment(intent_id: string) {
-		if (!intent_id) {
-			return this.unloadFrame();
+	private openPortal(intent_id: string) {
+		window.location.replace(this.getPayLink(intent_id));
+	}
+
+	confirmPayment(
+		intent_id: string,
+		use_iframe: boolean,
+		on_success?: () => void
+	) {
+		if (use_iframe) {
+			if (!intent_id) {
+				return this.unloadFrame();
+			}
+			this.loadFrame(intent_id, on_success);
+		} else {
+			this.openPortal(intent_id);
 		}
-		this.validateIntent(intent_id).then((_) => {
-			this.loadFrame(intent_id);
-		});
 	}
 }

@@ -1,17 +1,16 @@
 {
 	"name": "baray-js",
 	"private": true,
-	"version": "0.0.0",
+	"version": "0.1.4",
 	"type": "module",
 	"files": [
-		"dist",
-		"index.d.ts"
+		"dist"
 	],
 	"main": "./dist/baray.umd.cjs",
 	"module": "./dist/baray.js",
-	"types": "./index.d.ts",
+	"types": "./dist/index.d.ts",
 	"exports": {
-		"types": "./index.d.ts",
+		"types": "./dist/index.d.ts",
 		"import": "./dist/baray.js",
 		"require": "./dist/baray.umd.cjs"
 	},
@@ -22,12 +21,14 @@
 	"devDependencies": {
 		"@types/node": "^20.12.7",
 		"typescript": "^5.3.3",
-		"vite": "^5.0.10"
+		"vite": ">=5.1.7",
+		"vite-plugin-dts": "^3.9.1"
 	},
 	"dependencies": {
 		"@types/crypto-js": "^4.2.2",
 		"crypto-js": "^4.2.0",
 		"i": "^0.3.7",
+		"ibridge": "^0.0.5",
 		"npm": "^10.5.2",
 		"qrcode": "^1.5.3"
 	}
