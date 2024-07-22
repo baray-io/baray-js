@@ -1,12 +1,11 @@
 var px = Object.defineProperty;
 var Ex = (m, z, c) => z in m ? px(m, z, { enumerable: !0, configurable: !0, writable: !0, value: c }) : m[z] = c;
-var j = (m, z, c) => (Ex(m, typeof z != "symbol" ? z + "" : z, c), c);
+var j = (m, z, c) => Ex(m, typeof z != "symbol" ? z + "" : z, c);
 function xx() {
   return typeof window < "u";
 }
 function V(m, z) {
-  if (!m)
-    throw Error(z);
+  if (!m) throw Error(z);
 }
 class F0 {
   constructor(z) {
@@ -91,16 +90,14 @@ function Ax(m) {
   return m && m.__esModule && Object.prototype.hasOwnProperty.call(m, "default") ? m.default : m;
 }
 function Fx(m) {
-  if (m.__esModule)
-    return m;
+  if (m.__esModule) return m;
   var z = m.default;
   if (typeof z == "function") {
     var c = function x() {
       return this instanceof x ? Reflect.construct(z, arguments, this.constructor) : z.apply(this, arguments);
     };
     c.prototype = z.prototype;
-  } else
-    c = {};
+  } else c = {};
   return Object.defineProperty(c, "__esModule", { value: !0 }), Object.keys(m).forEach(function(x) {
     var h = Object.getOwnPropertyDescriptor(m, x);
     Object.defineProperty(c, x, h.get ? h : {
