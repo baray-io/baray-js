@@ -2,7 +2,8 @@ export declare class PublicClient {
     private readonly pay_gateway;
     constructor(public_key: string);
     unloadFrame(): void;
+    getPayLink(intent_id: string): string;
     private loadFrame;
-    openPortal(intent_id: string): void;
-    confirmPayment(intent_id: string, _onSuccess?: () => void): void;
+    private openPortal;
+    confirmPayment(intent_id: string, use_iframe: boolean, on_success?: () => void): void;
 }
