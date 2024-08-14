@@ -5,5 +5,9 @@ export declare class PublicClient {
     getPayLink(intent_id: string): string;
     private loadFrame;
     private openPortal;
-    confirmPayment(intent_id: string, use_iframe: boolean, on_success?: () => void): void;
+    confirmPayment(props: {
+        intent_id: string;
+        use_iframe: boolean;
+        on_success?: () => void;
+    }): void;
 }

@@ -46,6 +46,12 @@ export class PublicClient {
 		frame.id = "baray";
 		frame.src = this.getPayLink(intent_id);
 
+		frame.sandbox.add("allow-scripts");
+		frame.sandbox.add("allow-popups");
+		frame.sandbox.add("allow-forms");
+		frame.sandbox.add("allow-popups-to-escape-sandbox");
+		frame.sandbox.add("allow-top-navigation-to-custom-protocols");
+
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
 		frame.style.zIndex = "2147483647";
@@ -77,18 +83,18 @@ export class PublicClient {
 		window.location.replace(this.getPayLink(intent_id));
 	}
 
-	confirmPayment(
-		intent_id: string,
-		use_iframe: boolean,
-		on_success?: () => void
-	) {
-		if (use_iframe) {
-			if (!intent_id) {
+	confirmPayment(props: {
+		intent_id: string;
+		use_iframe: boolean;
+		on_success?: () => void;
+	}) {
+		if (props.use_iframe) {
+			if (!props.intent_id) {
 				return this.unloadFrame();
 			}
-			this.loadFrame(intent_id, on_success);
+			this.loadFrame(props.intent_id, props.on_success);
 		} else {
-			this.openPortal(intent_id);
+			this.openPortal(props.intent_id);
 		}
 	}
 }
