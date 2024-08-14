@@ -46,6 +46,12 @@ export class PublicClient {
 		frame.id = "baray";
 		frame.src = this.getPayLink(intent_id);
 
+		frame.sandbox.add("allow-scripts");
+		frame.sandbox.add("allow-popups");
+		frame.sandbox.add("allow-forms");
+		frame.sandbox.add("allow-popups-to-escape-sandbox");
+		frame.sandbox.add("allow-top-navigation-to-custom-protocols");
+
 		frame.style.backgroundColor = "transparent";
 		frame.style.position = "fixed";
 		frame.style.zIndex = "2147483647";
