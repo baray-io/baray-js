@@ -26,6 +26,7 @@ export class PrivateClient {
 		const _secret_key = new Key(secret_key);
 		const _webhook_secret = new WebhookKey(wh_secret_key);
 		const _webhook_iv = new WebhookKey(wh_iv_key);
+
 		must(
 			_api_key.isPublicKey(),
 			"Invalid public key. A public key must start with pk_***"
