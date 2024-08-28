@@ -2,6 +2,8 @@ export type IntentPayload = {
 	amount: String;
 	currency: String;
 	order_id: String;
+	tracking?: any;
+	order_details?: any;
 };
 
 export type IntentDetail = {
