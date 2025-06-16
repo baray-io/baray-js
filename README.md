@@ -20,29 +20,209 @@ npm install baray-io/baray-js
 
 ### Browser Usage (PublicClient)
 
-Use the `PublicClient` for frontend payment processing:
+Use the `PublicClient` for frontend payment processing. The client should call your backend API to create a payment intent, then use the returned intent ID to process the payment.
 
 ```typescript
+import React, { useState } from "react";
 import { PublicClient } from "baray-js";
 
 // Initialize with your public API key
 const baray = new PublicClient("pk_dev_your_public_key_here");
 
-// Confirm payment with iframe (recommended)
-baray.confirmPayment({
-	intent_id: "your_payment_intent_id",
-	use_iframe: true,
-	on_success: () => {
-		console.log("Payment successful!");
-		// Handle successful payment
-	},
-});
+interface PaymentData {
+	amount: number;
+	currency: string;
+	customer: {
+		email: string;
+		name: string;
+	};
+	items: Array<{
+		name: string;
+		price: number;
+		quantity: number;
+	}>;
+	description: string;
+}
 
-// Or redirect to payment page
-baray.confirmPayment({
-	intent_id: "your_payment_intent_id",
-	use_iframe: false,
-});
+const PaymentComponent: React.FC = () => {
+	const [isProcessing, setIsProcessing] = useState(false);
+	const [paymentStatus, setPaymentStatus] = useState<string>("");
+
+	// Sample payment data (in real app, this would come from props or state)
+	const paymentData: PaymentData = {
+		amount: 99.99,
+		currency: "USD",
+		customer: {
+			email: "customer@example.com",
+			name: "John Doe",
+		},
+		items: [{ name: "Premium Plan", price: 99.99, quantity: 1 }],
+		description: "Premium subscription",
+	};
+
+	// Helper function to create payment intent
+	const createPaymentIntent = async (data: PaymentData) => {
+		const response = await fetch("/api/checkout", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(data),
+		});
+
+		const result = await response.json();
+
+		if (!result.success) {
+			throw new Error("Failed to create payment intent");
+		}
+
+		return result;
+	};
+
+	// Method 1: Using iframe (recommended)
+	const processPaymentWithIframe = async () => {
+		setIsProcessing(true);
+		setPaymentStatus("Creating payment intent...");
+
+		try {
+			const result = await createPaymentIntent(paymentData);
+
+			setPaymentStatus("Opening payment window...");
+
+			// Use the intent ID to process payment with iframe
+			baray.confirmPayment({
+				intent_id: result.intent_id,
+				use_iframe: true,
+				on_success: () => {
+					setPaymentStatus("Payment successful!");
+					setIsProcessing(false);
+					// Handle successful payment (redirect, show success message, etc.)
+				},
+			});
+		} catch (error) {
+			console.error("Payment failed:", error);
+			setPaymentStatus(`Payment failed: ${error.message}`);
+			setIsProcessing(false);
+		}
+	};
+
+	// Method 2: Using redirect
+	const processPaymentWithRedirect = async () => {
+		setIsProcessing(true);
+		setPaymentStatus("Creating payment intent...");
+
+		try {
+			const result = await createPaymentIntent(paymentData);
+
+			setPaymentStatus("Redirecting to payment page...");
+
+			// Redirect to payment page
+			baray.confirmPayment({
+				intent_id: result.intent_id,
+				use_iframe: false,
+			});
+		} catch (error) {
+			console.error("Payment failed:", error);
+			setPaymentStatus(`Payment failed: ${error.message}`);
+			setIsProcessing(false);
+		}
+	};
+
+	// Method 3: Alternative - Direct window.open (simple but less control)
+	const processPaymentWithPopup = async () => {
+		setIsProcessing(true);
+		setPaymentStatus("Creating payment intent...");
+
+		try {
+			const result = await createPaymentIntent(paymentData);
+
+			setPaymentStatus("Opening payment page in new window...");
+
+			// Open payment page in new window/tab
+			window.open(`https://pay.baray.io/${result.intent_id}`, "_blank");
+
+			// Reset status after a delay since we can't track success with popup
+			setTimeout(() => {
+				setPaymentStatus(
+					"Payment window opened. Complete payment in the new tab."
+				);
+				setIsProcessing(false);
+			}, 1000);
+		} catch (error) {
+			console.error("Payment failed:", error);
+			setPaymentStatus(`Payment failed: ${error.message}`);
+			setIsProcessing(false);
+		}
+	};
+
+	// Close iframe manually
+	const closePaymentFrame = () => {
+		baray.unloadFrame();
+		setIsProcessing(false);
+		setPaymentStatus("Payment cancelled");
+	};
+
+	return (
+		<div className="payment-component">
+			<h3>Baray Payment Integration</h3>
+
+			<div className="payment-info">
+				<h4>Order Details:</h4>
+				<p>Amount: ${paymentData.amount}</p>
+				<p>Description: {paymentData.description}</p>
+				<p>
+					Customer: {paymentData.customer.name} ({paymentData.customer.email})
+				</p>
+			</div>
+
+			<div className="payment-methods">
+				<button
+					onClick={processPaymentWithIframe}
+					disabled={isProcessing}
+					className="btn btn-primary"
+				>
+					{isProcessing ? "Processing..." : "Pay with Iframe (Recommended)"}
+				</button>
+
+				<button
+					onClick={processPaymentWithRedirect}
+					disabled={isProcessing}
+					className="btn btn-secondary"
+				>
+					{isProcessing ? "Processing..." : "Pay with Redirect"}
+				</button>
+
+				<button
+					onClick={processPaymentWithPopup}
+					disabled={isProcessing}
+					className="btn btn-tertiary"
+				>
+					{isProcessing ? "Processing..." : "Pay in New Window"}
+				</button>
+
+				{isProcessing && (
+					<button onClick={closePaymentFrame} className="btn btn-danger">
+						Cancel Payment
+					</button>
+				)}
+			</div>
+
+			{paymentStatus && (
+				<div
+					className={`status ${
+						paymentStatus.includes("successful")
+							? "success"
+							: paymentStatus.includes("failed")
+							? "error"
+							: "info"
+					}`}
+				>
+					{paymentStatus}
+				</div>
+			)}
+		</div>
+	);
+};
+
+export default PaymentComponent;
 ```
 
 ### Server Usage (PrivateClient)
@@ -64,12 +244,10 @@ const intent = await baray.createIntent({
 	amount: "100.00",
 	currency: "USD",
 	order_id: "order_123",
-	tracking: {
-		customer_id: "customer_456",
-		email: "customer@example.com",
-	},
 	order_details: {
 		description: "Purchase of premium subscription",
+		customer_email: "customer@example.com",
+		customer_name: "John Doe",
 	},
 });
 
