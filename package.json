@@ -2,9 +2,21 @@
 	"name": "baray-js",
 	"private": true,
 	"version": "0.1.4",
+	"description": "JavaScript/TypeScript library for Baray payment gateway integration with support for both browser and Node.js environments",
+	"keywords": [
+		"payment",
+		"gateway",
+		"baray",
+		"typescript",
+		"javascript",
+		"payments",
+		"fintech"
+	],
 	"type": "module",
 	"files": [
-		"dist"
+		"dist",
+		"README.md",
+		"examples"
 	],
 	"main": "./dist/baray.umd.cjs",
 	"module": "./dist/baray.js",
@@ -16,7 +28,9 @@
 	},
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc && vite build"
+		"build": "tsc && vite build",
+		"test": "node test/index.js",
+		"prepublishOnly": "npm run build"
 	},
 	"devDependencies": {
 		"@types/node": "24.0.3",
