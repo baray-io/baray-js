@@ -1,6 +1,6 @@
 export declare class PublicClient {
     private readonly pay_gateway;
-    constructor(public_key: string);
+    constructor(api_key: string);
     unloadFrame(): void;
     getPayLink(intent_id: string): string;
     private loadFrame;

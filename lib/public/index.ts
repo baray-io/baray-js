@@ -1,25 +1,20 @@
 import { isBrower } from "../utils/is_browser";
-import { Key } from "../utils/key";
 import { must } from "../utils/must";
 
 export class PublicClient {
 	private readonly pay_gateway: string;
 
-	public constructor(public_key: string) {
+	public constructor(api_key: string) {
 		must(isBrower(), "This libary is meant to run only in the web browser");
-		const key = new Key(public_key);
+
 		must(
-			key.isPublicKey(),
-			"Invalid public key. A public key must start with pk_***"
+			api_key.startsWith("pk_prod_") ||
+				api_key.startsWith("pk_uat_") ||
+				api_key.startsWith("pk_dev_"),
+			"Invalid API key"
 		);
 
-		const pay_gateways = new Map([
-			["dev", "http://localhost:5173"],
-			["uat", "https://uat-pay.baray.io"],
-			["prod", "https://pay.baray.io"],
-		]);
-
-		this.pay_gateway = pay_gateways.get(key.mode)!;
+		this.pay_gateway = "https://pay.baray.io";
 	}
 
 	public unloadFrame() {

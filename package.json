@@ -19,17 +19,17 @@
 		"build": "tsc && vite build"
 	},
 	"devDependencies": {
-		"@types/node": "^20.12.7",
-		"typescript": "^5.3.3",
-		"vite": ">=5.1.7",
-		"vite-plugin-dts": "^3.9.1"
+		"@types/node": "24.0.3",
+		"typescript": "^5.8.3",
+		"vite": "6.3.5",
+		"vite-plugin-dts": "4.5.4"
 	},
 	"dependencies": {
 		"@types/crypto-js": "^4.2.2",
 		"crypto-js": "^4.2.0",
 		"i": "^0.3.7",
 		"ibridge": "^0.0.5",
-		"npm": "^10.5.2",
-		"qrcode": "^1.5.3"
+		"npm": "11.4.2",
+		"qrcode": "^1.5.4"
 	}
 }
