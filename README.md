@@ -1,6 +1,6 @@
 # Baray JS Payment Library
 
-A JavaScript/TypeScript library for integrating Baray payment gateway into your web applications. This library provides both client-side (browser) and server-side (Node.js) functionality for handling payments.
+A JavaScript/TypeScript library for integrating Baray API into your web applications. This library provides both client-side (browser) and server-side (Node.js) functionality for handling payments.
 
 ## Features
 
