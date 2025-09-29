@@ -1,9 +1,10 @@
 export type IntentPayload = {
-    amount: String;
-    currency: String;
-    order_id: String;
+    amount: string;
+    currency: string;
+    order_id: string;
     tracking?: any;
     order_details?: any;
+    custom_success_url?: string;
 };
 export type IntentDetail = {
     _id: string;
