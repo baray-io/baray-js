@@ -1,6 +1,6 @@
 import { isBrower } from "../utils/is_browser";
 import { must } from "../utils/must";
-import { IntentDetail, IntentPayload } from "../shared/types";
+import { AbaQrResponse, IntentDetail, IntentPayload } from "../shared/types";
 import CryptoJS from "crypto-js";
 
 export class PrivateClient {
@@ -88,5 +88,31 @@ export class PrivateClient {
 
 		const result = await fetch(`${this.api_gateway}/pay`, requestOptions);
 		return (await result.json()) as IntentDetail;
+	}
+
+	async createAbaQr(intent: IntentPayload) {
+		const myHeaders = new Headers();
+		myHeaders.append("x-api-key", this.api_key);
+		myHeaders.append("Content-Type", "application/json");
+
+		const raw = JSON.stringify(intent);
+		const encrypted = this.encrypt(raw);
+
+		const body = JSON.stringify({
+			data: encrypted,
+		});
+
+		const requestOptions: RequestInit = {
+			method: "POST",
+			headers: myHeaders,
+			body: body,
+			redirect: "follow",
+		};
+
+		const result = await fetch(
+			`${this.api_gateway}/payments/aba/pay_qr`,
+			requestOptions
+		);
+		return (await result.json()) as AbaQrResponse;
 	}
 }

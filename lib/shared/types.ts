@@ -18,4 +18,11 @@ export type IntentDetail = {
 	customer_id: string;
 };
 
+export type AbaQrResponse = {
+	intent_id: string;
+	qr_string: string;
+	abapay_deeplink: string;
+	checkout_qr_url: string;
+};
+
 export type Mode = "dev" | "uat" | "prod";
